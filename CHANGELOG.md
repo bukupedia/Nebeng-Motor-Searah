@@ -8,13 +8,49 @@ Pre-1.0 versions map to development phases.
 
 ## [Unreleased]
 
+### Added
+
+- `ARCHITECTURE.md` with the application architecture, module
+  responsibilities, data flow, user journeys, and booking lifecycle.
+
 ### Notes
 
-- `js/app.js` has not been created yet. `index.html` loads it as a module, so
-  the map, WhatsApp checkout, and admin panel stay inert until the
-  orchestrator wires the modules to the DOM.
 - No release tags exist yet. The version headings below describe development
   phases rather than tagged releases.
+
+## [0.3.0] - 2026-11-25
+
+### Added
+
+- `js/app.js` entry point that imports and connects `config.js`, `map.js`,
+  `whatsapp.js`, and `admin.js`.
+- Rider profile hydration from `RIDER_CONFIG`, including WhatsApp links, helmet
+  availability, detour limit, and route count.
+- Route cards generated from `ROUTES`, showing period, effective departure
+  time, endpoints, meeting-point count, and contribution.
+- Synchronized route selection across the cards, both form selects, the map,
+  the meeting-point dropdowns, and the contribution display.
+- Admin status and departure-time overrides applied from `admin.js` state.
+- Real-time detour badge updates for drag, map click, meeting-point selection,
+  and GPS; green within `maxDetourKm` and amber beyond it.
+- Accessible tab switching with Arrow, Home, and End key support.
+- Native form validation plus WhatsApp checkout in a new tab, with a manual
+  fallback link when popups are blocked.
+- Booked status disables both submit buttons and changes their labels to
+  "Today's Seats Are Fully Booked"; offline uses a separate disabled label.
+- Helmet-size enable/disable logic and spare-helmet availability handling.
+
+### Changed
+
+- Added route-card, contribution, map-status, submit-label, and
+  checkout-message hooks to `index.html`.
+- Added route-card, disabled-button, and feedback styles to `css/style.css`.
+- Disabled Leaflet scroll-wheel zoom so page scrolling does not zoom the map.
+
+### Notes
+
+- Phase 3 is implemented in the working tree. No release tag has been created
+  yet.
 
 ## [0.2.0] - 2026-11-25
 
@@ -66,8 +102,7 @@ Pre-1.0 versions map to development phases.
 
 ### Notes
 
-- `js/app.js` is still pending, so these modules are not imported by the page
-  yet.
+- These modules are imported by `js/app.js` in 0.3.0.
 
 ## [0.1.0] - 2026-11-25
 
@@ -103,13 +138,14 @@ Pre-1.0 versions map to development phases.
 | 2026-11-25 | [`e238513`](https://github.com/bukupedia/Nebeng-Motor-Searah/commit/e238513) | Initial commit with `README.md` only. |
 | 2026-11-25 | [`a763428`](https://github.com/bukupedia/Nebeng-Motor-Searah/commit/a763428) | Phase 1: static UI, rider config, and styles. |
 | 2026-11-25 | [`6054f84`](https://github.com/bukupedia/Nebeng-Motor-Searah/commit/6054f84) | Phase 2: map, WhatsApp, and admin modules. |
+| 2026-11-25 | Working tree | Phase 3: `js/app.js` entry point and UI synchronization. |
 
 ## Known limitations
 
-- `js/app.js` is not implemented, so the page currently renders the static
-  shell only.
 - OSRM and OpenStreetMap are public demo services without availability
   guarantees; the map falls back to a dashed line when OSRM fails.
+- The page depends on CDN-hosted Tailwind CSS, Leaflet, Font Awesome, and
+  Google Fonts.
 - Admin state is stored per device in `localStorage`; the URL query string is
   the shareable source of truth.
 - There is no build step, automated test suite, or CI workflow yet.

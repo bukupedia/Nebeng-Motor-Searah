@@ -209,6 +209,7 @@
       >
         <div class="flex items-start gap-3.5">
           <div
+            id="rider-avatar"
             class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-xl font-extrabold text-white shadow-sm"
             aria-hidden="true"
           >
@@ -245,7 +246,7 @@
               </div>
               <div class="rounded-lg bg-slate-50 px-2.5 py-2">
                 <dt class="font-medium text-slate-500">Jadwal</dt>
-                <dd class="mt-0.5 font-bold text-slate-800">2 rute/hari</dd>
+                <dd id="rider-schedule" class="mt-0.5 font-bold text-slate-800">2 rute/hari</dd>
               </div>
             </dl>
           </div>
@@ -283,9 +284,32 @@
         </div>
 
         <p id="gps-help" class="mt-2 text-xs leading-relaxed text-slate-500">
-          Detour maksimal <strong class="text-slate-700">5 km</strong> dari rute utama. Titik jemput di luar
-          jangkauan akan dikonfirmasi lewat WhatsApp.
+          Detour maksimal <strong id="max-detour-note" class="text-slate-700">5 km</strong> dari rute utama.
+          Titik jemput di luar jangkauan akan dikonfirmasi lewat WhatsApp.
         </p>
+        <p id="map-status" class="mt-1 text-xs font-semibold text-slate-500" role="status" aria-live="polite"></p>
+      </section>
+
+      <section
+        aria-labelledby="routes-heading"
+        class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:p-5"
+      >
+        <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h2 id="routes-heading" class="text-base font-bold text-slate-900">Jadwal hari ini</h2>
+            <p class="text-xs text-slate-500">Pilih pagi atau sore. Peta dan formulir mengikuti jadwal.</p>
+          </div>
+          <div class="rounded-full bg-brand-50 px-3 py-1.5 text-xs font-bold text-brand-700">
+            <span class="font-medium text-brand-600">Kontribusi</span>
+            <span id="contribution-amount">Rp 12.000</span>
+          </div>
+        </div>
+        <div
+          id="route-cards"
+          class="grid gap-3 sm:grid-cols-2"
+          role="radiogroup"
+          aria-label="Pilih jadwal rute"
+        ></div>
       </section>
 
       <section
@@ -467,9 +491,9 @@
             </fieldset>
 
             <div class="space-y-2">
-              <button type="submit" class="btn-wa">
+              <button id="ride-submit" type="submit" class="btn-wa">
                 <i class="fa-brands fa-whatsapp text-lg" aria-hidden="true"></i>
-                Lanjut ke WhatsApp
+                <span id="ride-submit-label">Lanjut ke WhatsApp</span>
               </button>
               <p class="text-center text-xs text-slate-500">
                 Detail pesanan dikirim ke WhatsApp rider untuk konfirmasi.
@@ -612,9 +636,9 @@
             </fieldset>
 
             <div class="space-y-2">
-              <button type="submit" class="btn-wa">
+              <button id="package-submit" type="submit" class="btn-wa">
                 <i class="fa-brands fa-whatsapp text-lg" aria-hidden="true"></i>
-                Lanjut ke WhatsApp
+                <span id="package-submit-label">Lanjut ke WhatsApp</span>
               </button>
               <p class="text-center text-xs text-slate-500">
                 Paket hanya dibawa bila searah dengan rute dan muat di motor.
@@ -622,6 +646,13 @@
             </div>
           </form>
         </div>
+
+        <p
+          id="checkout-message"
+          class="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700"
+          role="alert"
+          hidden
+        ></p>
       </section>
     </main>
 

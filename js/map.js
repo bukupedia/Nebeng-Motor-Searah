@@ -183,7 +183,7 @@ export class RideMap {
         throw new Error(`Elemen #${this.elementId} tidak ditemukan.`);
       }
 
-      this.map = L.map(element, { zoomControl: true }).setView(
+      this.map = L.map(element, { zoomControl: true, scrollWheelZoom: false }).setView(
         [this.center.lat, this.center.lng],
         this.zoom
       );
