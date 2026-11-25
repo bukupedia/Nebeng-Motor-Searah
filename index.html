@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Nebeng Motor Searah — Boncengan ke Sudirman</title>
+    <meta
+      name="description"
+      content="Nebeng motor harian Meruya Selatan–Sudirman. Pilih rute, titik temu, dan helm cadangan, lalu konfirmasi lewat WhatsApp."
+    />
+    <meta name="theme-color" content="#047857" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nebeng Motor Searah" />
+    <meta
+      property="og:description"
+      content="Boncengan motor harian Meruya Selatan–Sudirman dengan checkout via WhatsApp."
+    />
+    <meta property="og:locale" content="id_ID" />
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏍️</text></svg>" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                50: '#ecfdf5',
+                100: '#d1fae5',
+                200: '#a7f3d0',
+                300: '#6ee7b7',
+                400: '#34d399',
+                500: '#10b981',
+                600: '#059669',
+                700: '#047857',
+                800: '#065f46',
+                900: '#064e3b',
+              },
+            },
+            boxShadow: {
+              card: '0 1px 2px rgba(15, 23, 42, 0.05), 0 12px 28px -18px rgba(15, 23, 42, 0.28)',
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased">
+    <a class="skip-link" href="#main">Lewati ke konten utama</a>
+
+    <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
+      <div class="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+        <a class="flex min-w-0 items-center gap-2.5" href="#main">
+          <span
+            class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-lg text-white shadow-sm"
+            aria-hidden="true"
+          >
+            <i class="fa-solid fa-motorcycle"></i>
+          </span>
+          <span class="min-w-0 leading-tight">
+            <span class="block truncate text-sm font-extrabold tracking-tight text-slate-900">
+              Nebeng Motor Searah
+            </span>
+            <span class="block truncate text-[11px] font-medium text-slate-500">
+              Meruya → Sudirman · hari kerja
+            </span>
+          </span>
+        </a>
+
+        <a
+          class="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 active:scale-95"
+          href="https://wa.me/62895332782122"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fa-brands fa-whatsapp text-base" aria-hidden="true"></i>
+          <span class="hidden sm:inline">Chat rider</span>
+          <span class="sm:hidden">Chat</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main" class="mx-auto flex max-w-3xl flex-col gap-4 px-4 pb-10 pt-4 sm:gap-5">
+      <noscript>
+        <p class="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Aktifkan JavaScript untuk memuat peta, rute, dan formulir pemesanan.
+        </p>
+      </noscript>
+
+      <section id="admin-panel" class="admin-panel" aria-labelledby="admin-heading" hidden>
+        <div class="rounded-2xl border border-amber-300 bg-amber-50 p-4 shadow-sm">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h2 id="admin-heading" class="text-sm font-bold text-amber-900">
+                <i class="fa-solid fa-sliders mr-1.5" aria-hidden="true"></i>Panel admin
+              </h2>
+              <p class="mt-0.5 text-xs text-amber-800">
+                Ubah status ketersediaan secara instan. Perubahan disimpan di perangkat ini.
+              </p>
+            </div>
+            <button
+              id="admin-close"
+              type="button"
+              class="rounded-lg p-1.5 text-amber-700 transition hover:bg-amber-100 focus-visible:bg-amber-100"
+              aria-label="Tutup panel admin"
+            >
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Ubah status rider">
+            <button
+              type="button"
+              data-admin-status="available"
+              class="rounded-full border border-emerald-300 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50"
+            >
+              Available
+            </button>
+            <button
+              type="button"
+              data-admin-status="booked"
+              class="rounded-full border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-700 transition hover:bg-amber-100"
+            >
+              Booked
+            </button>
+            <button
+              type="button"
+              data-admin-status="offline"
+              class="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+            >
+              Offline
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <article
+        aria-labelledby="rider-name"
+        class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:p-5"
+      >
+        <div class="flex items-start gap-3.5">
+          <div
+            class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-xl font-extrabold text-white shadow-sm"
+            aria-hidden="true"
+          >
+            RP
+          </div>
+
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h1 id="rider-name" class="truncate text-lg font-extrabold tracking-tight text-slate-900">
+                Rizky Pratama
+              </h1>
+              <span id="rider-status" class="status-pill" data-status="available" role="status" aria-live="polite">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span id="rider-status-label">Available</span>
+              </span>
+            </div>
+
+            <p class="mt-0.5 text-sm font-medium text-slate-600">
+              <span id="rider-motor">Honda Vario 160 · Hitam Doff</span>
+            </p>
+
+            <dl class="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
+              <div class="rounded-lg bg-slate-50 px-2.5 py-2">
+                <dt class="font-medium text-slate-500">Plat</dt>
+                <dd id="rider-plate" class="mt-0.5 font-bold tracking-wide text-slate-800">B 41•• KQ</dd>
+              </div>
+              <div class="rounded-lg bg-slate-50 px-2.5 py-2">
+                <dt class="font-medium text-slate-500">Helm cadangan</dt>
+                <dd id="rider-helmet" class="mt-0.5 font-bold text-slate-800">Tersedia</dd>
+              </div>
+              <div class="rounded-lg bg-slate-50 px-2.5 py-2">
+                <dt class="font-medium text-slate-500">Maks. detour</dt>
+                <dd class="mt-0.5 font-bold text-slate-800"><span id="rider-detour">5</span> km</dd>
+              </div>
+              <div class="rounded-lg bg-slate-50 px-2.5 py-2">
+                <dt class="font-medium text-slate-500">Jadwal</dt>
+                <dd class="mt-0.5 font-bold text-slate-800">2 rute/hari</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </article>
+
+      <section
+        aria-labelledby="map-heading"
+        class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:p-5"
+      >
+        <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h2 id="map-heading" class="text-base font-bold text-slate-900">Rute &amp; titik jemput</h2>
+            <p class="text-xs text-slate-500">Ketuk penanda untuk melihat titik temu.</p>
+          </div>
+          <button
+            id="btn-locate"
+            type="button"
+            aria-describedby="gps-help"
+            class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3.5 py-2 text-xs font-bold text-brand-700 transition hover:bg-brand-100 active:scale-95"
+          >
+            <i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i>
+            Use My GPS Location
+          </button>
+        </div>
+
+        <div class="map-shell">
+          <div id="map" role="region" aria-label="Peta rute Nebeng Motor Searah"></div>
+          <div class="map-overlay">
+            <span id="detour-indicator" class="detour-chip" data-state="idle" role="status" aria-live="polite">
+              <i class="fa-solid fa-route" aria-hidden="true"></i>
+              Detour: <strong id="detour-value">—</strong> km
+            </span>
+          </div>
+        </div>
+
+        <p id="gps-help" class="mt-2 text-xs leading-relaxed text-slate-500">
+          Detour maksimal <strong class="text-slate-700">5 km</strong> dari rute utama. Titik jemput di luar
+          jangkauan akan dikonfirmasi lewat WhatsApp.
+        </p>
+      </section>
+
+      <section
+        aria-labelledby="booking-heading"
+        class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:p-5"
+      >
+        <h2 id="booking-heading" class="sr-only">Formulir pemesanan</h2>
+
+        <div class="tabs" role="tablist" aria-label="Pilih layanan" aria-orientation="horizontal">
+          <button
+            id="tab-ride"
+            type="button"
+            class="tab"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-ride"
+            data-tab="ride"
+          >
+            <i class="fa-solid fa-motorcycle" aria-hidden="true"></i>
+            <span>Motorcycle Ride Sharing</span>
+          </button>
+          <button
+            id="tab-package"
+            type="button"
+            class="tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-package"
+            data-tab="package"
+            tabindex="-1"
+          >
+            <i class="fa-solid fa-box" aria-hidden="true"></i>
+            <span>Same-Direction Package Delivery</span>
+          </button>
+        </div>
+
+        <div
+          id="panel-ride"
+          class="tab-panel mt-5"
+          role="tabpanel"
+          aria-labelledby="tab-ride"
+        >
+          <form id="booking-form" class="space-y-6">
+            <fieldset class="space-y-3">
+              <legend class="form-legend">
+                <span class="form-step" aria-hidden="true">1</span> Rute &amp; titik jemput
+              </legend>
+
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="sm:col-span-2">
+                  <label class="form-label" for="route-select">Rute harian</label>
+                  <select id="route-select" name="route" class="form-control" required>
+                    <option value="" selected disabled>Pilih rute</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="form-label" for="meeting-point-select">Titik temu</label>
+                  <select
+                    id="meeting-point-select"
+                    name="meetingPoint"
+                    class="form-control"
+                    required
+                    disabled
+                  >
+                    <option value="">Pilih rute dulu</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="form-label" for="pickup-landmark">Patokan jemput</label>
+                  <input
+                    id="pickup-landmark"
+                    name="pickupLandmark"
+                    type="text"
+                    class="form-control"
+                    placeholder="Contoh: depan Alfamart Meruya Selatan"
+                    autocomplete="off"
+                    required
+                  />
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="space-y-3">
+              <legend class="form-legend">
+                <span class="form-step" aria-hidden="true">2</span> Helm
+              </legend>
+
+              <div class="grid gap-2 sm:grid-cols-2">
+                <label class="choice-card">
+                  <input class="peer sr-only" type="radio" name="helmet" value="own" checked />
+                  <span class="choice-body">
+                    <i class="fa-solid fa-helmet-safety" aria-hidden="true"></i>
+                    <span>
+                      <span class="block font-semibold">Bawa helm sendiri</span>
+                      <span class="block text-xs text-slate-500">Tidak perlu helm tambahan</span>
+                    </span>
+                  </span>
+                </label>
+
+                <label class="choice-card">
+                  <input class="peer sr-only" type="radio" name="helmet" value="spare" />
+                  <span class="choice-body">
+                    <i class="fa-solid fa-head-side-mask" aria-hidden="true"></i>
+                    <span>
+                      <span class="block font-semibold">Pinjam helm cadangan</span>
+                      <span class="block text-xs text-slate-500">Gratis, sesuai ketersediaan</span>
+                    </span>
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label class="form-label" for="helmet-size">Ukuran helm cadangan</label>
+                <select id="helmet-size" name="helmetSize" class="form-control" disabled>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                </select>
+              </div>
+            </fieldset>
+
+            <fieldset class="space-y-3">
+              <legend class="form-legend">
+                <span class="form-step" aria-hidden="true">3</span> Barang bawaan
+              </legend>
+
+              <div>
+                <label class="form-label" for="luggage">Luggage</label>
+                <select id="luggage" name="luggage" class="form-control" required>
+                  <option value="none">Tanpa barang bawaan</option>
+                  <option value="backpack">Tas ransel (dipakai di punggung)</option>
+                  <option value="small-bag">Tas kecil / kantong belanja</option>
+                </select>
+                <p class="mt-1 text-xs text-slate-500">
+                  Barang besar atau lebih dari satu tas mohon dikonfirmasi lewat WhatsApp.
+                </p>
+              </div>
+            </fieldset>
+
+            <fieldset class="space-y-3">
+              <legend class="form-legend">
+                <span class="form-step" aria-hidden="true">4</span> Data penumpang
+              </legend>
+
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="form-label" for="passenger-name">Nama penumpang</label>
+                  <input
+                    id="passenger-name"
+                    name="passengerName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nama lengkap"
+                    autocomplete="name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label class="form-label" for="social-media">
+                    Sosial media <span class="font-normal text-slate-400">(opsional)</span>
+                  </label>
+                  <input
+                    id="social-media"
+                    name="socialMedia"
+                    type="text"
+                    class="form-control"
+                    placeholder="@username Instagram"
+                    autocomplete="off"
+                    aria-describedby="social-help"
+                  />
+                  <p id="social-help" class="mt-1 text-xs text-slate-500">
+                    Membantu rider mengenali kamu di titik temu.
+                  </p>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="space-y-2">
+              <button type="submit" class="btn-wa">
+                <i class="fa-brands fa-whatsapp text-lg" aria-hidden="true"></i>
+                Lanjut ke WhatsApp
+              </button>
+              <p class="text-center text-xs text-slate-500">
+                Detail pesanan dikirim ke WhatsApp rider untuk konfirmasi.
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <div
+          id="panel-package"
+          class="tab-panel mt-5"
+          role="tabpanel"
+          aria-labelledby="tab-package"
+          hidden
+        >
+          <form id="package-form" class="space-y-6">
+            <fieldset class="space-y-3">
+              <legend class="form-legend">
+                <span class="form-step" aria-hidden="true">1</span> Rute &amp; titik ambil
+              </legend>
+
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="sm:col-span-2">
+                  <label class="form-label" for="package-route-select">Rute harian</label>
+                  <select id="package-route-select" name="route" class="form-control" required>
+                    <option value="" selected disabled>Pilih rute</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="form-label" for="package-meeting-point">Titik temu</label>
+                  <select
+                    id="package-meeting-point"
+                    name="meetingPoint"
+                    class="form-control"
+                    required
+                    disabled
+                  >
+                    <option value="">Pilih rute dulu</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="form-label" for="package-pickup-landmark">Patokan ambil paket</label>
+                  <input
+                    id="package-pickup-landmark"
+                    name="pickupLandmark"
+                    type="text"
+                    class="form-control"
+                    placeholder="Contoh: lobi Apartemen Meruya"
+                    autocomplete="off"
+                    required
+                  />
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="space-y-3">
+              <legend class="form-legend">
+                <span class="form-step" aria-hidden="true">2</span> Detail paket
+              </legend>
+
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="form-label" for="package-size">Ukuran paket</label>
+                  <select id="package-size" name="packageSize" class="form-control" required>
+                    <option value="document">Dokumen / amplop</option>
+                    <option value="small">Paket kecil (&lt; 2 kg)</option>
+                    <option value="medium">Paket sedang (2–5 kg)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="form-label" for="package-description">Isi paket</label>
+                  <input
+                    id="package-description"
+                    name="packageDescription"
+                    type="text"
+                    class="form-control"
+                    placeholder="Contoh: berkas kantor"
+                    autocomplete="off"
+                    required
+                  />
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="space-y-3">
+              <legend class="form-legend">
+                <span class="form-step" aria-hidden="true">3</span> Penerima
+              </legend>
+
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="form-label" for="recipient-name">Nama penerima</label>
+                  <input
+                    id="recipient-name"
+                    name="recipientName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nama lengkap penerima"
+                    autocomplete="off"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label class="form-label" for="recipient-phone">WhatsApp penerima</label>
+                  <input
+                    id="recipient-phone"
+                    name="recipientPhone"
+                    type="tel"
+                    class="form-control"
+                    placeholder="08xx xxxx xxxx"
+                    inputmode="tel"
+                    autocomplete="off"
+                    pattern="[0-9+()\s-]{8,20}"
+                    required
+                  />
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="form-label" for="package-social-media">
+                    Sosial media pengirim <span class="font-normal text-slate-400">(opsional)</span>
+                  </label>
+                  <input
+                    id="package-social-media"
+                    name="socialMedia"
+                    type="text"
+                    class="form-control"
+                    placeholder="@username Instagram"
+                    autocomplete="off"
+                    aria-describedby="package-social-help"
+                  />
+                  <p id="package-social-help" class="mt-1 text-xs text-slate-500">
+                    Untuk verifikasi bila paket perlu dititipkan di titik temu.
+                  </p>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="space-y-2">
+              <button type="submit" class="btn-wa">
+                <i class="fa-brands fa-whatsapp text-lg" aria-hidden="true"></i>
+                Lanjut ke WhatsApp
+              </button>
+              <p class="text-center text-xs text-slate-500">
+                Paket hanya dibawa bila searah dengan rute dan muat di motor.
+              </p>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white">
+      <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 py-6 text-xs text-slate-500">
+        <p class="font-semibold text-slate-700">Nebeng Motor Searah</p>
+        <p>
+          Berbagi boncengan untuk komuter Jakarta. Kontribusi bahan bakar, bukan tarif angkutan umum.
+        </p>
+        <p>
+          <i class="fa-brands fa-whatsapp mr-1 text-brand-600" aria-hidden="true"></i>
+          <a class="font-semibold text-brand-700 underline-offset-2 hover:underline" href="https://wa.me/62895332782122" target="_blank" rel="noopener noreferrer">
+            +62 895-3327-82122
+          </a>
+        </p>
+      </div>
+    </footer>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

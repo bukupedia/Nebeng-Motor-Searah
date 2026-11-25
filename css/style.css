@@ -1,0 +1,450 @@
+:root {
+  --brand-50: #ecfdf5;
+  --brand-100: #d1fae5;
+  --brand-600: #059669;
+  --brand-700: #047857;
+  --ink-900: #0f172a;
+  --ink-500: #64748b;
+  --line: #cbd5e1;
+  --header-height: 64px;
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + 16px);
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Tailwind utilities such as `flex` can override the browser's default. */
+[hidden] {
+  display: none !important;
+}
+
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--ink-900);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 10px 24px -12px rgba(15, 23, 42, 0.6);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   Admin panel
+   -------------------------------------------------------------------------- */
+
+.admin-panel {
+  animation: panel-in 0.25s ease both;
+}
+
+/* --------------------------------------------------------------------------
+   Map
+   -------------------------------------------------------------------------- */
+
+.map-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+#map {
+  width: 100%;
+  height: clamp(300px, 46vh, 440px);
+  border-radius: 1rem;
+  background: #e8eef5;
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+
+/* Placeholder until Leaflet adds its own class to the container. */
+#map::after {
+  content: "Memuat peta…";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 18px 18px;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+#map.leaflet-container::after {
+  content: none;
+}
+
+@media (min-width: 768px) {
+  #map {
+    height: clamp(380px, 54vh, 520px);
+  }
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background: #e8eef5;
+}
+
+.leaflet-control-attribution {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.leaflet-control-zoom a {
+  color: #334155;
+}
+
+.map-overlay {
+  position: absolute;
+  inset-inline: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 500;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.detour-chip {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.82);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  box-shadow: 0 8px 20px -10px rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  transition: background-color 0.25s ease;
+}
+
+.detour-chip strong {
+  font-weight: 800;
+}
+
+.detour-chip[data-state="ok"] {
+  background: rgba(4, 120, 87, 0.94);
+}
+
+.detour-chip[data-state="warn"] {
+  background: rgba(180, 83, 9, 0.94);
+}
+
+.detour-chip[data-state="far"] {
+  background: rgba(185, 28, 28, 0.94);
+}
+
+/* --------------------------------------------------------------------------
+   Tabs
+   -------------------------------------------------------------------------- */
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0.3rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #f1f5f9;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.5rem;
+  border-radius: 0.75rem;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .tab {
+    padding: 0.7rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+.tab:hover {
+  color: var(--ink-900);
+}
+
+.tab[aria-selected="true"] {
+  background: #ffffff;
+  color: var(--brand-700);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 18px -12px rgba(15, 23, 42, 0.45);
+}
+
+.tab-panel {
+  animation: panel-in 0.28s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.tab-panel[hidden] {
+  display: none !important;
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Status pill
+   -------------------------------------------------------------------------- */
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.status-pill[data-status="booked"] {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.status-pill[data-status="offline"] {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.status-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: currentColor;
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.82);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Form controls
+   -------------------------------------------------------------------------- */
+
+.form-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.1rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--ink-900);
+}
+
+.form-step {
+  display: inline-grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background: var(--brand-100);
+  color: var(--brand-700);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: #ffffff;
+  color: var(--ink-900);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.form-control::placeholder {
+  color: #94a3b8;
+}
+
+.form-control:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.form-control:focus-visible {
+  outline: none;
+  border-color: var(--brand-600);
+  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.16);
+}
+
+.choice-card {
+  display: block;
+  cursor: pointer;
+}
+
+.choice-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.9rem;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.choice-body i {
+  margin-top: 0.15rem;
+  color: #64748b;
+  font-size: 0.95rem;
+  transition: color 0.18s ease;
+}
+
+.choice-card:hover .choice-body {
+  border-color: #a7f3d0;
+  background: #f7fdfa;
+}
+
+.choice-card input:focus-visible + .choice-body {
+  outline: 2px solid var(--brand-600);
+  outline-offset: 2px;
+}
+
+.choice-card input:checked + .choice-body {
+  border-color: var(--brand-600);
+  background: var(--brand-50);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+.choice-card input:checked + .choice-body i {
+  color: var(--brand-700);
+}
+
+.choice-card input:disabled + .choice-body {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-wa {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  background: var(--brand-600);
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  box-shadow: 0 10px 22px -14px rgba(4, 120, 87, 0.9);
+  transition: background-color 0.18s ease, transform 0.12s ease;
+}
+
+.btn-wa:hover {
+  background: var(--brand-700);
+}
+
+.btn-wa:active {
+  transform: scale(0.99);
+}
+
+/* --------------------------------------------------------------------------
+   Focus, scrollbar, motion
+   -------------------------------------------------------------------------- */
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid rgba(16, 185, 129, 0.55);
+  outline-offset: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #f8fafc;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
