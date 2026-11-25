@@ -51,6 +51,21 @@ body {
   animation: panel-in 0.25s ease both;
 }
 
+[data-admin-status][aria-pressed="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+  font-weight: 800;
+}
+
+#admin-copy-feedback[data-state="error"] {
+  color: #dc2626;
+}
+
+.form-control[readonly] {
+  background: #f8fafc;
+  color: #475569;
+}
+
 /* --------------------------------------------------------------------------
    Map
    -------------------------------------------------------------------------- */
