@@ -112,7 +112,6 @@ function cacheElements() {
   els.ridePickupLandmark = document.getElementById('pickup-landmark');
   els.packagePickupLandmark = document.getElementById('package-pickup-landmark');
 
-  els.helmetSize = document.getElementById('helmet-size');
   els.luggage = document.getElementById('luggage');
   els.passengerName = document.getElementById('passenger-name');
   els.socialMedia = document.getElementById('social-media');
@@ -385,13 +384,6 @@ function activateTab(name, { focus = false } = {}) {
   if (focus) tab.focus();
 }
 
-function syncHelmetSize() {
-  if (!els.rideForm || !els.helmetSize) return;
-
-  const selected = els.rideForm.querySelector('input[name="helmet"]:checked');
-  els.helmetSize.disabled = selected?.value !== 'spare';
-}
-
 function initHelmetOptions() {
   if (!els.rideForm) return;
 
@@ -405,12 +397,6 @@ function initHelmetOptions() {
     const spareHint = spareRadio.closest('.choice-card')?.querySelector('.text-xs');
     if (spareHint) spareHint.textContent = 'Helm cadangan tidak tersedia';
   }
-
-  els.rideForm.querySelectorAll('input[name="helmet"]').forEach((radio) => {
-    radio.addEventListener('change', syncHelmetSize);
-  });
-
-  syncHelmetSize();
 }
 
 function initAdmin() {
@@ -529,7 +515,6 @@ function handleRideSubmit(event) {
       pickupLandmark: els.ridePickupLandmark?.value.trim() ?? '',
       pickup: { lat: pickup.lat, lng: pickup.lng },
       helmet,
-      helmetSize: helmet === 'spare' ? els.helmetSize?.value ?? '' : '',
       luggage: els.luggage?.value ?? 'none',
       contribution: route.baseContribution,
     });

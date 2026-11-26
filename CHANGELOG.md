@@ -13,6 +13,11 @@ Pre-1.0 versions map to development phases.
 - `ARCHITECTURE.md` with the application architecture, module
   responsibilities, data flow, user journeys, and booking lifecycle.
 
+### Removed
+
+- Removed the spare-helmet size selector. The booking form and WhatsApp
+  message still include the helmet choice and spare-helmet availability.
+
 ### Notes
 
 - No release tags exist yet. The version headings below describe development
@@ -38,7 +43,7 @@ Pre-1.0 versions map to development phases.
   fallback link when popups are blocked.
 - Booked status disables both submit buttons and changes their labels to
   "Today's Seats Are Fully Booked"; offline uses a separate disabled label.
-- Helmet-size enable/disable logic and spare-helmet availability handling.
+- Spare-helmet availability handling.
 
 ### Changed
 

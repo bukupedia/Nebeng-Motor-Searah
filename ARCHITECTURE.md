@@ -215,7 +215,7 @@ Its responsibilities are:
 - Build booking data and hand it to `whatsapp.js`.
 - Open WhatsApp in a new tab or show a manual fallback link.
 - Render the detour badge and map/checkout feedback.
-- Enable or disable helmet-size selection and submit buttons.
+- Apply spare-helmet availability and manage submit button states.
 
 The module keeps a small in-memory state object:
 
@@ -355,7 +355,7 @@ WhatsApp bold markers (`*...*`) are included in the plain text.
 - Meeting point
 - Pickup landmark
 - Google Maps link built from pickup coordinates
-- Helmet choice and, when borrowing a spare, helmet size
+- Helmet choice
 - Luggage choice
 - Fuel contribution
 - Closing request for confirmation
@@ -875,8 +875,7 @@ Booked and offline states disable both checkout buttons and change their labels.
 | Click the map | Pickup pin moves; detour badge updates |
 | Click “Use My GPS Location” | Browser asks permission; pin moves on success; error message on failure |
 | Switch service tab | The other form is shown; the checkout message clears; form values persist |
-| Choose “Pinjam helm cadangan” | Helmet-size select becomes enabled |
-| Choose “Bawa helm sendiri” | Helmet-size select becomes disabled |
+| Choose “Pinjam helm cadangan” or “Bawa helm sendiri” | Helmet choice is recorded for the WhatsApp message |
 | Submit a valid form | WhatsApp opens in a new tab with a pre-filled message |
 | Submit an invalid form | Browser highlights the first invalid field |
 | Change admin status | Rider pill, URL, localStorage, and submit buttons update |
@@ -916,7 +915,6 @@ limit; amber means outside the route or over the configured limit.
 | Meeting point | Yes | Populated from the selected route's waypoints |
 | Pickup landmark | Yes | Human-readable landmark, e.g. “Depan Alfamart” |
 | Helmet | Yes | “Bawa helm sendiri” or “Pinjam helm cadangan” |
-| Helmet size | Only for spare | M, L, or XL; disabled when bringing own helmet |
 | Luggage | Yes | None, backpack, or small bag |
 | Passenger name | Yes | Used in the WhatsApp message |
 | Social media | No | Helps the rider recognize the passenger |

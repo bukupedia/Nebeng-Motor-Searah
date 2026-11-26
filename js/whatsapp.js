@@ -138,11 +138,7 @@ function buildRideMessage(data) {
   lines.push(`*Lokasi jemput:* ${pickupLink}`);
 
   const helmetLabel = HELMET_LABELS[data.helmet] ?? HELMET_LABELS.own;
-  const helmetSize =
-    data.helmet === 'spare' && optionalText(data.helmetSize)
-      ? ` (ukuran ${optionalText(data.helmetSize)})`
-      : '';
-  lines.push(`*Helm:* ${helmetLabel}${helmetSize}`);
+  lines.push(`*Helm:* ${helmetLabel}`);
   lines.push(`*Barang bawaan:* ${LUGGAGE_LABELS[data.luggage] ?? LUGGAGE_LABELS.none}`);
 
   const contribution = formatRupiah(data.contribution ?? data.baseContribution ?? data.fee);
