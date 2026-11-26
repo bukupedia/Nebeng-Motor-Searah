@@ -29,7 +29,7 @@ export const RIDER_CONFIG = {
     color: 'Hitam Doff',
   },
   licensePlate: 'B 41•• KQ',
-  spareHelmet: true,
+  spareHelmet: false,
   maxDetourKm: 5,
   homeBase: 'Meruya Selatan, Jakarta Barat',
   operatingDays: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'],
